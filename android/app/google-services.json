@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "764932400711",
+    "project_id": "shopmate-shoppinglist-app",
+    "storage_bucket": "shopmate-shoppinglist-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:764932400711:android:7da38692ed167a7ec5b362",
+        "android_client_info": {
+          "package_name": "com.example.shopmate"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDyw_OJOcjtLqN_jSVLXAc8WpfvYax5U8c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
