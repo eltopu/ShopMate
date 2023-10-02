@@ -6,7 +6,6 @@ import 'package:shopmate/firebase_options.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MaterialApp(
-    title: 'Flutter Demo',
     theme: ThemeData(
       colorScheme: ColorScheme.fromSeed(
           seedColor: const Color.fromARGB(255, 18, 32, 47)),
