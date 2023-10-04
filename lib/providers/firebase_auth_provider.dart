@@ -3,12 +3,12 @@ import 'dart:ffi';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shopmate/firebase_options.dart';
-import 'package:shopmate/services/auth/auth_provider.dart';
+import 'package:shopmate/providers/auth_provider.dart';
 import 'package:shopmate/services/auth/auth_user.dart';
 
 class FirebaseAuthProvider implements AuthProvider {
   @override
-  Future<AuthUser> createUser({
+  Future<UserModel> createUser({
     required String email,
     required String password,
   }) async {
@@ -25,17 +25,17 @@ class FirebaseAuthProvider implements AuthProvider {
   }
 
   @override
-  AuthUser? get currentUser {
+  UserModel? get currentUser {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      return AuthUser.fromFirebase(user);
+      return UserModel.fromFirebase(user);
     } else {
       return null;
     }
   }
 
   @override
-  Future<AuthUser> logIn({
+  Future<UserModel> logIn({
     required String email,
     required String password,
   }) async {
