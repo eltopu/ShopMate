@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shopmate/firebase_options.dart';
+import 'package:shopmate/utilities/error_dialog.dart';
 import 'package:shopmate/widgets/button.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -136,7 +137,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   TextButton(
                     onPressed: () {},
                     child: const Align(
-                      alignment: Alignment.centerLeft,
+                      alignment: Alignment.center,
                       child: Text(
                         'Forgot your password?',
                         style: TextStyle(
@@ -170,8 +171,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         } else {
                           print('User not found');
                         }
+                      } on FirebaseAuthException catch (e) {
+                        if (e.code == 'user-not-found') {
+                          await showErrorDialog(context, 'User Not Found');
+                        } else {
+                          await showErrorDialog(context, 'Error: ${e.code}');
+                        }
                       } catch (e) {
-                        print(e);
+                        await showErrorDialog(context, e.toString());
                       }
                     },
                   ),

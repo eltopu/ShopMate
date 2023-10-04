@@ -56,8 +56,11 @@ class HomeScreen extends StatelessWidget {
                     child: Text(
                       "Welcome to ShopMate App,your comprehensive solution for modernizing the way you manage your shopping list.ShopMate eliminates the need for paper-lists and forgetfulness by encapsulating everything you need in an easy to use mobile application.Join Us , and make your shopping experience, more organized and collaborative",
                       style: TextStyle(
-                        fontSize: 16.0,
                         color: Colors.black,
+                        fontSize: 16,
+                        fontFamily: 'IBM Plex Sans Thai Looped',
+                        fontWeight: FontWeight.w600,
+                        height: 0,
                       ),
                     ),
                   ),

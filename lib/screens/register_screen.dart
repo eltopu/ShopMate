@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shopmate/firebase_options.dart';
+import 'package:shopmate/utilities/error_dialog.dart';
 import 'package:shopmate/widgets/button.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -152,8 +153,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         } else {
                           print('Failed');
                         }
+                      } on FirebaseAuthException catch (e) {
+                        if (e.code == 'invalid-email') {
+                          await showErrorDialog(
+                              context, 'Invalid Email format');
+                        } else {
+                          await showErrorDialog(context, 'Error: ${e.code}');
+                        }
                       } catch (e) {
-                        print(e);
+                        await showErrorDialog(context, e.toString());
                       }
                     },
                   ),
