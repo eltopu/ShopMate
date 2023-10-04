@@ -3,22 +3,18 @@ import 'package:flutter/material.dart';
 Future<void> showErrorDialog(
   BuildContext context,
   String text,
-) {
-  return showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: const Text('An Error Occurred.'),
-        content: Text(text),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text('OK'),
-          )
-        ],
-      );
-    },
-  ); //incase the showErrorDialogue returns a null
+) async {
+  final scaffoldMessenger = ScaffoldMessenger.of(context);
+
+  scaffoldMessenger.showSnackBar(
+    SnackBar(
+      content: Text(text),
+      action: SnackBarAction(
+        label: 'OK',
+        onPressed: () {
+          scaffoldMessenger.hideCurrentSnackBar();
+        },
+      ),
+    ),
+  );
 }

@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:shopmate/firebase_options.dart';
+import 'package:shopmate/services/auth/auth_service.dart';
 import 'package:shopmate/utilities/error_dialog.dart';
 import 'package:shopmate/widgets/button.dart';
 
@@ -32,7 +31,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    AuthService.firebase().initialize;
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
@@ -144,10 +143,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       final email = _email.text;
                       final password = _password.text;
                       try {
-                        await FirebaseAuth.instance
-                            .createUserWithEmailAndPassword(
-                                email: email, password: password);
-                        final user = FirebaseAuth.instance.currentUser;
+                        await AuthService.firebase().createUser(
+                          email: email,
+                          password: password,
+                        );
+                        final user = AuthService.firebase().currentUser;
                         if (user != null) {
                           print('Success');
                         } else {
