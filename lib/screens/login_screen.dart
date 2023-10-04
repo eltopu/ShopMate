@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shopmate/firebase_options.dart';
+import 'package:shopmate/widgets/button.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -152,74 +153,41 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               Column(
                 children: [
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.75,
-                      height: MediaQuery.of(context).size.height * .06,
-                      decoration: ShapeDecoration(
-                        color: const Color(0xFF3486AA),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        shadows: const [
-                          BoxShadow(
-                            color: Color(0x3F000000),
-                            blurRadius: 4,
-                            offset: Offset(0, 4),
-                            spreadRadius: 0,
-                          ),
-                        ],
-                      ),
-                      child: TextButton(
-                        onPressed: () async {
-                          final email = _email.text;
-                          final password = _password.text;
-                          try {
-                            await FirebaseAuth.instance
-                                .signInWithEmailAndPassword(
-                                    email: email, password: password);
-                            final user = FirebaseAuth.instance.currentUser;
-                            if (user != null) {
-                              print('Success');
-                              // ignore: use_build_context_synchronously
-                              Navigator.of(context).pushNamedAndRemoveUntil(
-                                  '/list/', (route) => false);
-                            } else {
-                              print('User not found');
-                            }
-                          } catch (e) {
-                            print(e);
-                          }
-                        },
-                        child: const Text(
-                          'Login',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontFamily: 'Inter',
-                            fontWeight: FontWeight.w600,
-                            height: 0,
-                          ),
-                        ),
-                      ),
-                    ),
+                  ButtonWidget(
+                    text: 'Login',
+                    onPressed: () async {
+                      final email = _email.text;
+                      final password = _password.text;
+                      try {
+                        await FirebaseAuth.instance.signInWithEmailAndPassword(
+                            email: email, password: password);
+                        final user = FirebaseAuth.instance.currentUser;
+                        if (user != null) {
+                          print('Success');
+                          // ignore: use_build_context_synchronously
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              '/list/', (route) => false);
+                        } else {
+                          print('User not found');
+                        }
+                      } catch (e) {
+                        print(e);
+                      }
+                    },
                   ),
                   TextButton(
                     onPressed: () {
                       Navigator.of(context).pushNamedAndRemoveUntil(
                           '/register/', (route) => false);
                     },
-                    child: const Align(
-                      child: Text(
-                        'Already have an account? Register',
-                        style: TextStyle(
-                          color: Color(0xFF3486AA),
-                          fontSize: 16,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w400,
-                          height: 0,
-                        ),
+                    child: const Text(
+                      'Already have an account? Register',
+                      style: TextStyle(
+                        color: Color(0xFF3486AA),
+                        fontSize: 16,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w400,
+                        height: 0,
                       ),
                     ),
                   ),
