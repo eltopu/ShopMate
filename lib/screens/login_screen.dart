@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shopmate/firebase_options.dart';
 import 'package:shopmate/services/auth/auth_service.dart';
-import 'package:shopmate/utilities/error_dialog.dart';
+import 'package:shopmate/utilities/error_snackbar.dart';
 import 'package:shopmate/widgets/button.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -176,12 +176,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         }
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'user-not-found') {
-                          await showErrorDialog(context, 'User Not Found');
+                          await errorSnackbar(context, 'User Not Found');
                         } else {
-                          await showErrorDialog(context, 'Error: ${e.code}');
+                          await errorSnackbar(context, 'Error: ${e.code}');
                         }
                       } catch (e) {
-                        await showErrorDialog(context, e.toString());
+                        await errorSnackbar(context, e.toString());
                       }
                     },
                   ),

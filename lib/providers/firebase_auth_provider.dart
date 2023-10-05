@@ -69,3 +69,5 @@ class FirebaseAuthProvider implements AuthProvider {
     );
   }
 }
+
+class UserNotLoggdInAuthException implements Exception {}

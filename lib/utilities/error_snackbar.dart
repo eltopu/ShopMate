@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Future<void> showErrorDialog(
+Future<void> errorSnackbar(
   BuildContext context,
   String text,
 ) async {
