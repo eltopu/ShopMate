@@ -1,7 +1,7 @@
 import 'dart:ffi';
 
 import 'package:shopmate/providers/auth_provider.dart';
-import 'package:shopmate/services/auth/auth_user.dart';
+import 'package:shopmate/model/user_model.dart';
 import 'package:shopmate/providers/firebase_auth_provider.dart';
 
 class AuthService implements AuthProvider {

@@ -1,5 +1,5 @@
 import 'dart:ffi';
-import 'package:shopmate/services/auth/auth_user.dart';
+import 'package:shopmate/model/user_model.dart';
 
 abstract class AuthProvider {
   Future<void> initialize();
