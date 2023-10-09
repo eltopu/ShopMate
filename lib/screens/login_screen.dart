@@ -5,6 +5,7 @@ import 'package:shopmate/firebase_options.dart';
 import 'package:shopmate/services/auth/auth_service.dart';
 import 'package:shopmate/utilities/error_snackbar.dart';
 import 'package:shopmate/widgets/button.dart';
+import 'package:shopmate/widgets/text_input_field.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -57,83 +58,20 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               Column(
                 children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.85,
-                    height: MediaQuery.of(context).size.height * .07,
-                    decoration: ShapeDecoration(
-                      color: const Color(0xFFE4E4E4),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      shadows: const [
-                        BoxShadow(
-                          color: Color(0x3F000000),
-                          blurRadius: 4,
-                          offset: Offset(0, 4),
-                          spreadRadius: 0,
-                        ),
-                      ],
-                    ),
-                    child: Row(children: [
-                      Expanded(
-                        child: TextField(
-                          decoration: const InputDecoration(
-                            hintText: 'Email',
-                            border: InputBorder.none,
-                            contentPadding:
-                                EdgeInsets.symmetric(horizontal: 15),
-                          ),
-                          controller: _email,
-                          autocorrect: false,
-                          keyboardType: TextInputType.emailAddress,
-                        ),
-                      ),
-                      const Icon(
-                        Icons.email,
-                        color: Color(0xFF838383),
-                      )
-                    ]),
+                  TextInputField(
+                    controller: _email,
+                    hintText: 'Email',
+                    icon: Icons.email,
                   ),
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 20),
                   ),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.85,
-                    height: MediaQuery.of(context).size.height * .07,
-                    decoration: ShapeDecoration(
-                      color: const Color(0xFFE4E4E4),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      shadows: const [
-                        BoxShadow(
-                          color: Color(0x3F000000),
-                          blurRadius: 4,
-                          offset: Offset(0, 4),
-                          spreadRadius: 0,
-                        ),
-                      ],
-                    ),
-                    child: Row(children: [
-                      Expanded(
-                        child: TextField(
-                          decoration: const InputDecoration(
-                            hintText: 'Password',
-                            border: InputBorder.none,
-                            contentPadding:
-                                EdgeInsets.symmetric(horizontal: 15),
-                          ),
-                          controller: _password,
-                          autocorrect: false,
-                          obscureText: true,
-                          enableSuggestions: false,
-                        ),
-                      ),
-                      const Icon(
-                        Icons.lock,
-                        color: Color(0xFF838383),
-                      )
-                    ]),
+                  TextInputField(
+                    controller: _password,
+                    hintText: 'Password',
+                    icon: Icons.lock,
+                    enableSuggestions: false,
+                    obscureText: true,
                   ),
                   TextButton(
                     onPressed: () {},
