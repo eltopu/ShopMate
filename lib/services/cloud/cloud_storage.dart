@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shopmate/services/cloud/cloud_lists.dart';
 import 'package:shopmate/services/cloud/cloud_storage_constants.dart';
+import 'package:shopmate/utilities/exceptions/cloud_storage_exception.dart';
 
 class FirebaseCloudStorage {
   final lists = FirebaseFirestore.instance.collection('lists');
@@ -10,7 +11,7 @@ class FirebaseCloudStorage {
     try {
       await lists.doc(documentId).delete();
     } catch (e) {
-      throw Exception();
+      throw CouldNotDeleteListException();
     }
   }
 
@@ -22,7 +23,7 @@ class FirebaseCloudStorage {
     try {
       lists.doc(documentId).update({textFieldName: text});
     } catch (e) {
-      throw Exception();
+      throw CouldNotUpdateListException();
     }
   }
 
@@ -48,7 +49,7 @@ class FirebaseCloudStorage {
                 ),
           );
     } catch (e) {
-      throw Exception();
+      throw CouldNotGetAllListException();
     }
   }
 
