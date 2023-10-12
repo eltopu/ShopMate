@@ -3,6 +3,8 @@ import 'package:shopmate/services/auth/auth_service.dart';
 import 'package:shopmate/services/cloud/cloud_lists.dart';
 import 'package:shopmate/services/cloud/cloud_storage.dart';
 import 'package:shopmate/utilities/generics/get_argument.dart';
+import 'package:shopmate/widgets/button.dart';
+import 'package:shopmate/widgets/text_input_field.dart';
 
 class CreateUpdateListScreen extends StatefulWidget {
   const CreateUpdateListScreen({super.key});
@@ -13,6 +15,7 @@ class CreateUpdateListScreen extends StatefulWidget {
 
 class _CreateUpdateListScreenState extends State<CreateUpdateListScreen> {
   CloudList? _list;
+
   late final FirebaseCloudStorage _listsService;
   late final TextEditingController _textController;
 
@@ -20,16 +23,22 @@ class _CreateUpdateListScreenState extends State<CreateUpdateListScreen> {
   void initState() {
     _listsService = FirebaseCloudStorage();
     _textController = TextEditingController();
+
     super.initState();
   }
 
   void _textControllerListener() async {
     final list = _list;
+
     if (list == null) {
       return;
     }
     final text = _textController.text;
-    _listsService.updateList(documentId: list.documentId, text: text);
+
+    _listsService.updateList(
+      documentId: list.documentId,
+      text: text,
+    );
   }
 
   void _setupTextControllerListener() {
@@ -67,6 +76,7 @@ class _CreateUpdateListScreenState extends State<CreateUpdateListScreen> {
 
   void _saveListIfTextIsNotEmpty() {
     final list = _list;
+
     final text = _textController.text;
     if (text.isNotEmpty && list != null) {
       _listsService.updateList(documentId: list.documentId, text: text);
@@ -87,7 +97,7 @@ class _CreateUpdateListScreenState extends State<CreateUpdateListScreen> {
       appBar: AppBar(
         elevation: 0.0,
         title: const Text(
-          'New List',
+          'Create New List',
           style: TextStyle(
             color: Colors.black,
             fontSize: 20,
@@ -106,12 +116,36 @@ class _CreateUpdateListScreenState extends State<CreateUpdateListScreen> {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
               _setupTextControllerListener();
-              return TextField(
-                controller: _textController,
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
-                decoration: const InputDecoration(
-                  hintText: 'Type list...',
+              return Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        children: [
+                          TextInputField(
+                            controller: _textController,
+                            hintText: 'Type list',
+                            maxLines: null,
+                            keyboartType: TextInputType.multiline,
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          ButtonWidget(
+                            text: 'Save',
+                            onPressed: () {
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                  '/list/', (route) => false);
+                            },
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               );
             default:

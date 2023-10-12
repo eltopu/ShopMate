@@ -1,0 +1,22 @@
+{
+  "name": "functions",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eltopu/ShopMate.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eltopu/ShopMate/issues"
+  },
+  "homepage": "https://github.com/eltopu/ShopMate#readme",
+  "dependencies": {
+    "firebase-functions": "^4.4.1"
+  }
+}

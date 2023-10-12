@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:shopmate/screens/list_view_screen.dart';
 import 'package:shopmate/services/auth/auth_service.dart';
 import 'package:shopmate/services/cloud/cloud_lists.dart';
 import 'package:shopmate/services/cloud/cloud_storage.dart';
+import 'package:shopmate/utilities/delete_dialog.dart';
 import 'package:shopmate/utilities/logout_dialog.dart';
+
+enum MenuDrawer { logout }
 
 class ListScreen extends StatefulWidget {
   const ListScreen({super.key});
@@ -41,74 +43,137 @@ class _ListScreenState extends State<ListScreen> {
         centerTitle: true,
         backgroundColor: Colors.white54,
         bottomOpacity: 0.0,
-        actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed(
-                  '/new-list/',
-                );
-              },
-              icon: const Icon(
-                Icons.add,
-                color: Colors.black,
-              )),
-          IconButton(
-            onPressed: () async {
-              final logOut = await showLogOutDialog(context);
-              if (logOut) {
-                await AuthService.firebase().logOut();
-                Navigator.of(context)
-                    .pushNamedAndRemoveUntil('/login/', (route) => false);
-              }
+        leading: Builder(builder: (context) {
+          return IconButton(
+            icon: const Icon(Icons.menu, color: Colors.black),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
             },
-            icon: const Icon(
-              Icons.logout,
-              color: Colors.black,
+          );
+        }),
+      ),
+      drawer: Drawer(
+          child: Container(
+        color: const Color(0xFFD9D9D9),
+        width: 150,
+        child: ListView(
+          children: [
+            ListTile(
+              title: const Text(
+                'Add Collaborator',
+                textAlign: TextAlign.center,
+              ),
+              onTap: () {},
             ),
-          ),
-        ],
+            ListTile(
+              title: const Text(
+                'Manage Collaborator',
+                textAlign: TextAlign.center,
+              ),
+              onTap: () {},
+            ),
+            ListTile(
+              title: const Text(
+                'Profile Settings',
+                textAlign: TextAlign.center,
+              ),
+              onTap: () {},
+            ),
+            ListTile(
+              title: const Text(
+                'Logout',
+                textAlign: TextAlign.center,
+              ),
+              onTap: () {
+                showLogOutDialog(context);
+              },
+            ),
+          ],
+        ),
+      )),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).pushNamed(
+            '/new-list/',
+          );
+        },
+        backgroundColor: const Color(0xFFD9D9D9),
+        child: const Icon(Icons.add_rounded, color: Colors.black),
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(
-            horizontal: (MediaQuery.of(context).size.width * 0.07),
-            vertical: 30),
-        child: Column(children: [
-          Container(
-            width: MediaQuery.of(context).size.width * 0.85,
-            height: MediaQuery.of(context).size.width * 0.3,
-            decoration: ShapeDecoration(
-              color: const Color(0xFFE4E4E4),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5)),
-            ),
-            child: StreamBuilder(
-              stream: _listsService.allLists(ownerUserId: userId),
-              builder: (context, snapshot) {
-                switch (snapshot.connectionState) {
-                  case ConnectionState.waiting:
-                  case ConnectionState.active:
-                    if (snapshot.hasData) {
-                      final allLists = snapshot.data as Iterable<CloudList>;
-                      return ListViewScreen(
-                        lists: allLists,
-                        onTap: (note) {
-                          Navigator.of(context).pushNamed(
-                            '/new-list/',
-                            arguments: note,
-                          );
-                        },
+          horizontal: (MediaQuery.of(context).size.width * 0.07),
+          vertical: 30,
+        ),
+        child: StreamBuilder(
+          stream: _listsService.allLists(ownerUserId: userId),
+          builder: (context, snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.waiting:
+              case ConnectionState.active:
+                if (snapshot.hasData) {
+                  final allLists = snapshot.data as Iterable<CloudList>;
+                  return ListView.builder(
+                    itemCount: allLists.length,
+                    itemBuilder: (context, index) {
+                      final list = allLists.elementAt(index);
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 0.85,
+                          height: MediaQuery.of(context).size.width * 0.2,
+                          decoration: ShapeDecoration(
+                            color: const Color(0xFFE4E4E4),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                          child: ListTile(
+                            onLongPress: () {
+                              showMenu(
+                                context: context,
+                                position: RelativeRect.fill,
+                                items: <PopupMenuEntry>[
+                                  const PopupMenuItem(
+                                    value: 'delete',
+                                    child: Text('Delete'),
+                                  ),
+                                ],
+                                initialValue: null,
+                              ).then(
+                                (value) {
+                                  if (value == 'delete') {
+                                    showDeleteDialog(context);
+                                  }
+                                },
+                              );
+                            },
+                            onTap: () {
+                              Navigator.of(context).pushNamed(
+                                '/new-list/',
+                                arguments: list,
+                              );
+                            },
+                            title: Text(
+                              list.text,
+                              maxLines: 1,
+                              softWrap: true,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ),
                       );
-                    } else {
-                      return const CircularProgressIndicator();
-                    }
-
-                  default:
-                    return const CircularProgressIndicator();
+                    },
+                  );
+                } else {
+                  return const CircularProgressIndicator();
                 }
-              },
-            ),
-          ),
-        ]),
+
+              default:
+                return const CircularProgressIndicator();
+            }
+          },
+        ),
       ),
     );
   }

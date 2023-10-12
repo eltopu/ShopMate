@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shopmate/services/auth/auth_service.dart';
 // import 'package:shopmate/utilities/generic_dialog.dart';
 
 // Future<bool> showLogOutDialog(BuildContext context) {
@@ -35,6 +36,9 @@ Future<bool> showLogOutDialog(BuildContext context) async {
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop(true); // Log out
+                  AuthService.firebase().logOut();
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil('/login/', (route) => false);
                 },
                 child: const Text('Log out'),
               ),

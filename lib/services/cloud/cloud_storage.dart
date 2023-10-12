@@ -21,7 +21,9 @@ class FirebaseCloudStorage {
     required String text,
   }) async {
     try {
-      lists.doc(documentId).update({textFieldName: text});
+      lists.doc(documentId).update({
+        textFieldName: text,
+      });
     } catch (e) {
       throw CouldNotUpdateListException();
     }

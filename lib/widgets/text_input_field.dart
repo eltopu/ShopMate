@@ -6,6 +6,8 @@ class TextInputField extends StatelessWidget {
   final IconData? icon;
   final bool obscureText;
   final bool enableSuggestions;
+  final int? maxLines;
+  final TextInputType? keyboartType;
 
   const TextInputField({
     Key? key,
@@ -14,6 +16,8 @@ class TextInputField extends StatelessWidget {
     this.icon,
     this.obscureText = false,
     this.enableSuggestions = false,
+    this.maxLines,
+    this.keyboartType,
   }) : super(key: key);
 
   @override
