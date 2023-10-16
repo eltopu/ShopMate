@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:shopmate/services/auth/auth_service.dart';
+import 'package:shopmate/services/cloud/cloud_user_details.dart';
 import 'package:shopmate/utilities/error_snackbar.dart';
 import 'package:shopmate/widgets/button.dart';
 import 'package:shopmate/widgets/text_input_field.dart';
@@ -15,11 +17,17 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   late final TextEditingController _email;
   late final TextEditingController _password;
+  late final TextEditingController _fullname;
+  late final TextEditingController _dob;
+  late final TextEditingController _gender;
 
   @override
   void initState() {
     _email = TextEditingController();
     _password = TextEditingController();
+    _fullname = TextEditingController();
+    _dob = TextEditingController();
+    _gender = TextEditingController();
     super.initState();
   }
 
@@ -27,6 +35,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void dispose() {
     _email.dispose();
     _password.dispose();
+    _fullname.dispose();
+    _dob.dispose();
+    _gender.dispose();
     super.dispose();
   }
 
@@ -57,6 +68,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Column(
                 children: [
                   TextInputField(
+                    controller: _fullname,
+                    hintText: 'Full Name',
+                    icon: Icons.person,
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 20),
+                  ),
+                  TextInputField(
                     controller: _email,
                     hintText: 'Email',
                     icon: Icons.email,
@@ -78,16 +97,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ButtonWidget(
                     text: 'Register',
                     onPressed: () async {
+                      final fullName = _fullname.text;
                       final email = _email.text;
                       final password = _password.text;
                       try {
                         await AuthService.firebase().createUser(
                           email: email,
                           password: password,
+                          fullName: fullName,
                         );
+                        addUserDetails(fullName, email, password);
                         final user = AuthService.firebase().currentUser;
                         if (user != null) {
                           print('Success');
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              '/login/', (route) => false);
                         } else {
                           print('Failed');
                         }

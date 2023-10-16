@@ -7,11 +7,13 @@ import 'package:firebase_auth/firebase_auth.dart'
 import 'package:shopmate/firebase_options.dart';
 import 'package:shopmate/model/user_model.dart';
 import 'package:shopmate/providers/auth_provider.dart';
+import 'package:shopmate/services/cloud/cloud_user_details.dart';
 import 'package:shopmate/utilities/exceptions/auth_exception.dart';
 
 class FirebaseAuthProvider implements AuthProvider {
   @override
   Future<UserModel> createUser({
+    required String fullName,
     required String email,
     required String password,
   }) async {
@@ -21,6 +23,7 @@ class FirebaseAuthProvider implements AuthProvider {
         email: email,
         password: password,
       );
+      addUserDetails(fullName, email, password);
       final user = currentUser;
       if (user != null) {
         return user;
@@ -46,7 +49,6 @@ class FirebaseAuthProvider implements AuthProvider {
   }
 
   @override
-  // TODO: implement currentUser
   UserModel? get currentUser {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {

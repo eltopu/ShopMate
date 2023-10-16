@@ -53,44 +53,48 @@ class _ListScreenState extends State<ListScreen> {
         }),
       ),
       drawer: Drawer(
-          child: Container(
-        color: const Color(0xFFD9D9D9),
-        width: 150,
-        child: ListView(
-          children: [
-            ListTile(
-              title: const Text(
-                'Add Collaborator',
-                textAlign: TextAlign.center,
+        child: Container(
+          color: const Color(0xFFD9D9D9),
+          width: 150,
+          child: ListView(
+            children: [
+              ListTile(
+                title: const Text(
+                  'Add Collaborator',
+                  textAlign: TextAlign.center,
+                ),
+                onTap: () {},
               ),
-              onTap: () {},
-            ),
-            ListTile(
-              title: const Text(
-                'Manage Collaborator',
-                textAlign: TextAlign.center,
+              ListTile(
+                title: const Text(
+                  'Manage Collaborator',
+                  textAlign: TextAlign.center,
+                ),
+                onTap: () {},
               ),
-              onTap: () {},
-            ),
-            ListTile(
-              title: const Text(
-                'Profile Settings',
-                textAlign: TextAlign.center,
+              ListTile(
+                title: const Text(
+                  'Profile Settings',
+                  textAlign: TextAlign.center,
+                ),
+                onTap: () {
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil('/profile/', (route) => false);
+                },
               ),
-              onTap: () {},
-            ),
-            ListTile(
-              title: const Text(
-                'Logout',
-                textAlign: TextAlign.center,
+              ListTile(
+                title: const Text(
+                  'Logout',
+                  textAlign: TextAlign.center,
+                ),
+                onTap: () {
+                  showLogOutDialog(context);
+                },
               ),
-              onTap: () {
-                showLogOutDialog(context);
-              },
-            ),
-          ],
+            ],
+          ),
         ),
-      )),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).pushNamed(
@@ -166,11 +170,15 @@ class _ListScreenState extends State<ListScreen> {
                     },
                   );
                 } else {
-                  return const CircularProgressIndicator();
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
                 }
 
               default:
-                return const CircularProgressIndicator();
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
             }
           },
         ),
