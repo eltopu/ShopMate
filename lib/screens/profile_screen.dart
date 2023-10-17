@@ -1,7 +1,14 @@
 import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shopmate/model/cloud_user_model.dart';
+import 'package:shopmate/services/cloud/cloud_users.dart';
+import 'package:shopmate/utilities/delete_account_dialog.dart';
 import 'package:shopmate/utilities/select_image.dart';
 import 'package:shopmate/widgets/button.dart';
 import 'package:shopmate/widgets/text_input_field.dart';
@@ -13,12 +20,19 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
+class UserController extends GetxController {
+  static final myUser = Rx<CloudUserModel?>(null);
+}
+
 class _ProfileScreenState extends State<ProfileScreen> {
   late final TextEditingController _fullname;
+  String name = '';
+  CloudUser? user;
 
   @override
   void initState() {
     _fullname = TextEditingController();
+    getUserInfo();
     super.initState();
   }
 
@@ -32,9 +46,54 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void selectImage() async {
     Uint8List img = await pickImage(ImageSource.gallery);
-    setState(() {
-      _image = img;
-    });
+    final compressedImage = await FlutterImageCompress.compressWithList(
+      img,
+      quality: 90,
+    );
+
+    setState(
+      () {
+        _image = compressedImage;
+      },
+    );
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    CollectionReference usersCollection =
+        FirebaseFirestore.instance.collection('users');
+    QuerySnapshot querySnapshot =
+        await usersCollection.where('user_id', isEqualTo: uid).get();
+    String documentId = querySnapshot.docs.first.id;
+    final userDoc =
+        FirebaseFirestore.instance.collection('users').doc(documentId);
+    final userDocSnapshot = await userDoc.get();
+    if (userDocSnapshot.exists) {
+      // The document exists, update it
+      await userDoc.update({'profile_picture': _image});
+    } else {
+      // The document doesn't exist, create it
+      await userDoc.set({'profile_picture': _image});
+    }
+  }
+
+  getUserInfo() async {
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    CollectionReference usersCollection =
+        FirebaseFirestore.instance.collection('users');
+    QuerySnapshot querySnapshot =
+        await usersCollection.where('user_id', isEqualTo: uid).get();
+    String documentId = querySnapshot.docs.first.id;
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(documentId)
+        .snapshots()
+        .listen(
+      (event) {
+        if (event.exists) {
+          final data = event.data() as Map<String, dynamic>;
+          final fullName = data['full_name'] as String;
+          name = fullName;
+        }
+      },
+    );
   }
 
   @override
@@ -82,6 +141,45 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   )
                 ],
               ),
+              // Text(UserController.myUser.value?.fullName ?? 'Full Name'),
+              Stack(
+                children: [
+                  Text(name),
+                  Positioned(
+                    left: 30,
+                    // top: 0,
+                    child: IconButton(
+                      onPressed: () async {
+                        String name = _fullname.text;
+                        String uid = FirebaseAuth.instance.currentUser!.uid;
+                        CollectionReference usersCollection =
+                            FirebaseFirestore.instance.collection('users');
+                        QuerySnapshot querySnapshot = await usersCollection
+                            .where('user_id', isEqualTo: uid)
+                            .get();
+                        String documentId = querySnapshot.docs.first.id;
+                        final userDoc = FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(documentId);
+                        final userDocSnapshot = await userDoc.get();
+
+                        if (userDocSnapshot.exists) {
+                          // The document exists, update it
+                          await userDoc.update({'full_name': name});
+                        } else {
+                          // The document doesn't exist, create it
+                          await userDoc.set({'full_name': name});
+                        }
+
+                        // Call getUserInfo() again to fetch the updated name
+                        getUserInfo();
+                      },
+                      icon: const Icon(Icons.edit_note),
+                    ),
+                  ),
+                ],
+              ),
+
               Container(
                 width: 300,
                 height: 200,
@@ -128,7 +226,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           )),
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        showDeleteAccountDialog(context);
+                      },
                       child: const Text('Delete Account',
                           style: TextStyle(
                             color: Colors.black,
@@ -151,7 +251,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               ButtonWidget(
                 text: 'Update',
-                onPressed: () {},
+                onPressed: () async {
+                  String name = _fullname.text;
+                  String uid = FirebaseAuth.instance.currentUser!.uid;
+                  CollectionReference usersCollection =
+                      FirebaseFirestore.instance.collection('users');
+                  QuerySnapshot querySnapshot = await usersCollection
+                      .where('user_id', isEqualTo: uid)
+                      .get();
+                  String documentId = querySnapshot.docs.first.id;
+                  final userDoc = FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(documentId);
+                  final userDocSnapshot = await userDoc.get();
+
+                  if (userDocSnapshot.exists) {
+                    // The document exists, update it
+                    await userDoc.update({'full_name': name});
+                  } else {
+                    // The document doesn't exist, create it
+                    await userDoc.set({'full_name': name});
+                  }
+
+                  // Call getUserInfo() again to fetch the updated name
+                  getUserInfo();
+                },
               )
             ],
           ),

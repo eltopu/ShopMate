@@ -7,7 +7,7 @@ import 'package:shopmate/screens/profile_screen.dart';
 import 'package:shopmate/screens/register_screen.dart';
 import 'package:shopmate/services/auth/auth_service.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   AuthService.firebase().initialize;
   runApp(MaterialApp(
@@ -16,7 +16,7 @@ void main() {
           seedColor: const Color.fromARGB(255, 18, 32, 47)),
     ),
     home: const HomeScreen(),
-    initialRoute: '/profile/',
+    initialRoute: '/',
     routes: {
       '/login/': (context) => const LoginScreen(),
       '/register/': (context) => const RegisterScreen(),

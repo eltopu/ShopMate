@@ -39,6 +39,8 @@ dependencies:
   firebase_auth: ^4.10.0
   cloud_firestore: ^4.9.2
   image_picker: ^1.0.4
+  get: ^4.6.6
+  flutter_image_compress: ^2.0.4
 
 dev_dependencies:
   flutter_test:

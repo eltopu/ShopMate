@@ -16,3 +16,12 @@ class GenericExceptionAuthException implements Exception {
 }
 
 class UserNotLoggdInAuthException implements Exception {}
+
+class CouldNotDeleteAccountAuthException implements Exception {
+  final String message;
+
+  CouldNotDeleteAccountAuthException(this.message);
+
+  @override
+  String toString() => 'CouldNotDeleteAccountAuthException: $message';
+}

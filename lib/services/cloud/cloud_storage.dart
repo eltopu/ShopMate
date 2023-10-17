@@ -5,11 +5,20 @@ import 'package:shopmate/utilities/exceptions/cloud_storage_exception.dart';
 
 class FirebaseCloudStorage {
   final lists = FirebaseFirestore.instance.collection('lists');
+  final users = FirebaseFirestore.instance.collection('users');
 
   //delete lists
   Future<void> deleteList({required String documentId}) async {
     try {
       await lists.doc(documentId).delete();
+    } catch (e) {
+      throw CouldNotDeleteListException();
+    }
+  }
+
+  Future<void> deleteUser({required String documentId}) async {
+    try {
+      await users.doc(documentId).delete();
     } catch (e) {
       throw CouldNotDeleteListException();
     }
@@ -24,6 +33,18 @@ class FirebaseCloudStorage {
       lists.doc(documentId).update({
         textFieldName: text,
       });
+    } catch (e) {
+      throw CouldNotUpdateListException();
+    }
+  }
+
+  Future<void> updateUser({
+    required String documentId,
+    required String fullName,
+    required String profilePicture,
+  }) async {
+    try {
+      users.doc(documentId).update({fullName: '', profilePicture: ''});
     } catch (e) {
       throw CouldNotUpdateListException();
     }

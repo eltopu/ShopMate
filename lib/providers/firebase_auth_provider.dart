@@ -3,7 +3,7 @@ import 'dart:developer' as devtools show log;
 import 'package:firebase_core/firebase_core.dart';
 
 import 'package:firebase_auth/firebase_auth.dart'
-    show FirebaseAuth, FirebaseAuthException;
+    show FirebaseAuth, FirebaseAuthException, User;
 import 'package:shopmate/firebase_options.dart';
 import 'package:shopmate/model/user_model.dart';
 import 'package:shopmate/providers/auth_provider.dart';
@@ -129,5 +129,23 @@ class FirebaseAuthProvider implements AuthProvider {
       //initialize app before instance...copied from firebase_options.dart
       options: DefaultFirebaseOptions.currentPlatform,
     );
+  }
+
+  @override
+  Future<UserModel> deleteUser() async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        await user.delete();
+        print('User account deleted');
+      } else {
+        print('No user signed in.');
+      }
+    } catch (e) {
+      throw CouldNotDeleteAccountAuthException(
+          'Failed to delete the user account: $e');
+    }
+    throw GenericExceptionAuthException();
   }
 }

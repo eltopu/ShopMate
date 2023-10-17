@@ -13,5 +13,6 @@ abstract class AuthProvider {
     required String email,
     required String password,
   });
+  Future<UserModel> deleteUser();
   Future<Void> logOut();
 }

@@ -40,4 +40,7 @@ class AuthService implements AuthProvider {
 
   @override
   Future<void> initialize() => provider.initialize();
+
+  @override
+  Future<UserModel> deleteUser() => provider.deleteUser();
 }
